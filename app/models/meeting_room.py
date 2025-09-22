@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Text
 
-from app.core.db import Base
+from core.db import Base
 
 
 class MeetingRoom(Base):
