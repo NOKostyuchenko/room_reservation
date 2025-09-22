@@ -2,13 +2,13 @@ from sqlalchemy import Integer, Column
 from sqlalchemy.orm import declarative_base, sessionmaker, declared_attr
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
-from core.config import settings
+from app.core.config import settings
 
 
 class PreBase:
 
     @declared_attr
-    def __table_name__(cls):
+    def __tablename__(cls):
         # Именем таблицы будет название модели в нижнем регистре.
         return cls.__name__.lower()
     
