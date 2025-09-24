@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from core.db import get_async_session
-from crud.meeting_room import create_meeting_room, get_room_id_by_name
+from crud.meeting_room import create_meeting_room, get_room_id_by_name, read_all_rooms_from_db
 from schemas.meeting_room import MeetingRoomCreate, MeetingRoomDB
 
 router = APIRouter()
@@ -22,3 +22,14 @@ async def create_new_meeting_room(
 
     new_room = await create_meeting_room(meeting_room, session)
     return new_room
+
+@router.get(
+    "/meeting_rooms/",
+    response_model=list[MeetingRoomDB],
+    response_model_exclude_none=True
+)
+async def get_all_meeting_rooms(
+    session = Depends(get_async_session)
+):
+    list_rooms = await read_all_rooms_from_db(session)
+    return list_rooms
