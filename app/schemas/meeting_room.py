@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class MeetingRoomBase(BaseModel):
     name: Optional[str] = Field(None, min_length=2, max_length=100)
-    description: Optional[str]
+    description: Optional[str] = Field(None)
 
 
 class MeetingRoomCreate(MeetingRoomBase):
