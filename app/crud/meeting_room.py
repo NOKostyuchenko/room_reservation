@@ -5,9 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.meeting_room import MeetingRoom
 from crud.base import CRUDBase
+from schemas.meeting_room import MeetingRoomCreate, MeetingRoomUpdate
 
 
-class CRUDMeetingRoom(CRUDBase):
+class CRUDMeetingRoom(CRUDBase[
+    MeetingRoom,
+    MeetingRoomCreate,
+    MeetingRoomUpdate
+]):
 
 
     @staticmethod

@@ -74,6 +74,7 @@ async def remove_meeting_room(
 
     return db_room
 
+
 async def check_name_dublicate(
     room_name: str,
     session: AsyncSession
