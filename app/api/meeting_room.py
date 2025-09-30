@@ -2,9 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.db import get_async_session
-from crud.meeting_room import (create_meeting_room, get_room_id_by_name,
-                               read_all_rooms_from_db, update_meeting_room,
-                               get_meeting_room_by_id, delete_meeting_room)
+from crud.meeting_room import meeting_room_crud
 from schemas.meeting_room import (MeetingRoomCreate, MeetingRoomDB,
                                   MeetingRoomUpdate)
 from models.meeting_room import MeetingRoom
@@ -25,7 +23,7 @@ async def create_new_meeting_room(
 
     await check_name_dublicate(meeting_room.name, session)
 
-    new_room = await create_meeting_room(meeting_room, session)
+    new_room = await meeting_room_crud.create(meeting_room, session)
     return new_room
 
 
@@ -38,7 +36,7 @@ async def get_all_meeting_rooms(
     session: AsyncSession = Depends(get_async_session)
 ):
     
-    list_rooms = await read_all_rooms_from_db(session)
+    list_rooms = await meeting_room_crud.get_multi(session)
     return list_rooms
 
 
@@ -57,7 +55,7 @@ async def partially_update_meeting_room(
     if update_data.name is not None:
         await check_name_dublicate(update_data.name, session)
 
-    meeting_room = await update_meeting_room(meeting_room, update_data, session)
+    meeting_room = await meeting_room_crud.update(meeting_room, update_data, session)
     return meeting_room
 
 
@@ -72,7 +70,7 @@ async def remove_meeting_room(
 ):
     
     meeting_room = await check_meeting_room_exists(meeting_room_id, session)
-    db_room = await delete_meeting_room(meeting_room, session)
+    db_room = await meeting_room_crud.delete(meeting_room, session)
 
     return db_room
 
@@ -81,7 +79,7 @@ async def check_name_dublicate(
     session: AsyncSession
 ) -> None:
     
-    room_id = await get_room_id_by_name(room_name, session)
+    room_id = await meeting_room_crud.get_room_id_by_name(room_name, session)
 
     if room_id is not None:
         raise HTTPException(status_code=422,
@@ -93,7 +91,7 @@ async def check_meeting_room_exists(
     session: AsyncSession
 ) -> MeetingRoom:
     
-    meeting_room = await get_meeting_room_by_id(meeting_room_id, session)
+    meeting_room = await meeting_room_crud.get(meeting_room_id, session)
 
     if meeting_room is None:
         raise HTTPException(status_code=404,
