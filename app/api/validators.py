@@ -1,8 +1,12 @@
+from typing import Optional
+
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.meeting_room import MeetingRoom
 from crud.meeting_room import meeting_room_crud
+from crud.reservation import reservation_crud
+from models.reservation import Reservation
 
 
 async def check_name_dublicate(
@@ -28,3 +32,15 @@ async def check_meeting_room_exists(
         raise HTTPException(status_code=404,
                             detail="Meeting room not found!")
     return meeting_room
+
+
+async def check_reservation_intersections(**kwargs) -> None:
+    reservations: list = await reservation_crud.get_reservations_at_the_same_time(
+        **kwargs
+    )
+    if reservations:
+        raise HTTPException(
+            status_code=422,
+            detail=str(reservations)
+        )
+
