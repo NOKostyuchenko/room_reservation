@@ -7,6 +7,8 @@ class ReservationBase(BaseModel):
     from_reserve: datetime
     to_reserve: datetime
 
+    model_config = {"extra": "forbid"}
+
 
 class ReservationUpdate(ReservationBase):
     

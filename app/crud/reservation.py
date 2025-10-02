@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,23 +13,29 @@ class CRUDReservation(CRUDBase):
 
     @staticmethod
     async def get_reservations_at_the_same_time(
+        *,
         from_reserve: datetime,
         to_reserve: datetime,
         meetingroom_id: int,
+        reservation_id: Optional[int] = None,
         session: AsyncSession
     ) -> list[Reservation]:
         
-        db_object = await session.execute(
-            select(Reservation).where(
-                and_(
-                    Reservation.meetingroom_id == meetingroom_id,
-                    Reservation.from_reserve <= to_reserve,
-                    Reservation.to_reserve >= from_reserve
-                )
-            )  
+        select_stmt = select(Reservation).where(
+            and_(
+                Reservation.meetingroom_id == meetingroom_id,
+                Reservation.from_reserve <= to_reserve,
+                Reservation.to_reserve >= from_reserve
+            )
         )
 
-        return db_object.all()
+        if reservation_id is not None:
+            select_stmt = select_stmt.where(
+                Reservation.id != reservation_id
+            )
+        
+        reservations = await session.execute(select_stmt)
+        return reservations.all()
 
 
 reservation_crud = CRUDReservation(Reservation)
