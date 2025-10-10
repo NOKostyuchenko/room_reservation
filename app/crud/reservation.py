@@ -38,4 +38,17 @@ class CRUDReservation(CRUDBase):
         return reservations.all()
 
 
+    @staticmethod
+    async def get_future_reservations_for_room(
+        meetingroom_id: int,
+        session: AsyncSession
+    ) -> list[Reservation]:
+        select_stmt = select(Reservation).where(
+            Reservation.meetingroom_id == meetingroom_id,
+            Reservation.to_reserve > datetime.now()
+        )
+        reservations = await session.execute(select_stmt)
+        return reservations.scalars().all()
+
+
 reservation_crud = CRUDReservation(Reservation)
