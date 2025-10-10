@@ -6,6 +6,8 @@ from crud.meeting_room import meeting_room_crud
 from schemas.meeting_room import (MeetingRoomCreate, MeetingRoomDB,
                                   MeetingRoomUpdate)
 from api.validators import check_meeting_room_exists, check_name_dublicate
+from schemas.reservation import ReservationDB
+from crud.reservation import reservation_crud
 
 router = APIRouter()
 
@@ -72,4 +74,19 @@ async def remove_meeting_room(
     db_room = await meeting_room_crud.delete(meeting_room, session)
 
     return db_room
+
+
+@router.get(
+    "/{meeting_room_id}/reservations",
+    response_model=list[ReservationDB]
+)
+async def get_reservations_for_room(
+    meeting_room_id: int,
+    session: AsyncSession = Depends(get_async_session)
+):
+    await check_meeting_room_exists(meeting_room_id, session)
+    reservations: list = await reservation_crud.get_future_reservations_for_room(
+        meeting_room_id, session
+    )
+    return reservations
 
