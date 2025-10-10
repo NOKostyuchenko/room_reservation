@@ -18,17 +18,19 @@ class ReservationUpdate(ReservationBase):
 
     @field_validator("from_reserve")
     def check_from_reserve_later_than_now(cls, from_reserve: datetime):
-        if datetime.now() <= from_reserve:
+        if datetime.now() >= from_reserve:
             raise ValueError("You can't book retroactively!")
         return from_reserve
     
 
-    @model_validator(mode="after")
+    @model_validator(mode="before")
     def check_from_reserve_before_to_reserve(
         cls,
-        reservation: "ReservationCreate | ReservationUpdate"
-    ) -> "ReservationCreate | ReservationUpdate":
-        if reservation.from_reserve >= reservation.to_reserve:
+        reservation: dict
+    ) -> dict:
+        if reservation.get("from_reserve") == None or reservation.get("to_reserve") == None:
+            raise ValueError("The from_reserve or to_reserve fields are not set!")
+        elif reservation["from_reserve"] >= reservation["to_reserve"]:
             raise ValueError("The end time of the booking cannot be less than the start time!")
         return reservation
 
@@ -42,6 +44,6 @@ class ReservationDelete(ReservationBase):
     meetingroom_id: int
 
 
-class ReservationDB(ReservationCreate):
+class ReservationDB(ReservationBase):
     id: int
 

@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from core.db import Base
 from models.reservation import Reservation
 
+
 class MeetingRoom(Base):
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text)
