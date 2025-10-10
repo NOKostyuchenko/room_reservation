@@ -76,7 +76,6 @@ async def remove_meeting_room(
     return db_room
 
 
-
 @router.get(
     "/{meeting_room_id}/reservations",
     response_model=list[ReservationDB]
@@ -90,3 +89,4 @@ async def get_reservations_for_room(
         meeting_room_id, session
     )
     return reservations
+
