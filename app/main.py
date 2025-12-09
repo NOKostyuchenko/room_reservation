@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from uvicorn import run
 from api.routers import main_router
-from core.config import settings
+from core.configs import app_settings
 
-app = FastAPI(title=settings.app_title, docs_url="/swagger")
+app = FastAPI(title=app_settings.app_title, docs_url="/swagger")
 
 app.include_router(main_router)
 

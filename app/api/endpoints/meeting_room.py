@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.db import get_async_session
+from core.db_connect import get_async_session
 from crud.meeting_room import meeting_room_crud
 from schemas.meeting_room import (MeetingRoomCreate, MeetingRoomDB,
                                   MeetingRoomUpdate)
