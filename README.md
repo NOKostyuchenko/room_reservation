@@ -26,8 +26,8 @@
 |     DB_USER    | User name for the DB |   'user'  |    
 |   DB_PASSWORD  |  Password for the DB |   '123'   |
 |     DB_HOST    |   Host for the DB    |'127.0.0.1'|
-|     DB_PORT    |   Port for the DB    |    8000   |
-|     DB_NAME    |    Database name     |    8000   |  
+|     DB_PORT    |   Port for the DB    |    5432   |
+|     DB_NAME    |    Database name     |    'db'   |  
 
 ### Migration SQLite
 `alembic upgrade head`
