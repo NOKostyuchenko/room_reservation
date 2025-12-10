@@ -16,19 +16,20 @@ sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, APP_DIR)
 
 from core.base import Base
-from core.configs import app_settings
+from core.db_connect import dsn
+
 
 config = context.config
 
 # init path to DB
 
-config.set_main_option("sqlalchemy.url", app_settings.database_url)
+config.set_main_option("sqlalchemy.url", dsn)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-
+print(f"Model tables: {[table for table in target_metadata.tables]}")
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
