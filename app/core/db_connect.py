@@ -2,7 +2,7 @@ from sqlalchemy import Integer, Column
 from sqlalchemy.orm import declarative_base, sessionmaker, declared_attr
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
-from core.config import settings
+from core.configs import db_settings
 
 
 class PreBase:
@@ -21,9 +21,12 @@ class PreBase:
 #  В качестве основы для базового класса укажем класс PreBase.
 Base = declarative_base(cls=PreBase)
 
-engine = create_async_engine(settings.database_url)
+dsn = f"postgresql+asyncpg://{db_settings.db_user}:{db_settings.db_password}@{db_settings.db_host}:{db_settings.db_port}/{db_settings.db_name}"
+
+engine = create_async_engine(dsn, echo=True)
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
+
 
 #  Asynchronous session generator function for dependency injection
 async def get_async_session():

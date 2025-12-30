@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Text
 from sqlalchemy.orm import relationship
 
-from core.db import Base
+from core.db_connect import Base
 from models.reservation import Reservation
 
 

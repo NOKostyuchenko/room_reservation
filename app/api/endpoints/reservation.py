@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from schemas.reservation import (
     ReservationCreate, ReservationDB, ReservationUpdate
 )
-from core.db import get_async_session
+from core.db_connect import get_async_session
 from api.validators import (
     check_meeting_room_exists,
     check_reservation_intersections,
